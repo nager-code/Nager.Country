@@ -42,6 +42,7 @@ jobs:
           A new version of the JSON Country Dataset is now available
           - Country Names
             - Common name
+            - Slug
             - Official name
             - Native name
             - Translations into multiple languages
