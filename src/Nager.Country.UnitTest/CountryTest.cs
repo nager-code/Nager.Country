@@ -156,6 +156,24 @@ namespace Nager.Country.UnitTest
         }
 
         [TestMethod]
+        public void CheckTldFormat()
+        {
+            ICountryProvider countryProvider = new CountryProvider();
+            var countries = countryProvider.GetCountries();
+
+            foreach (var country in countries)
+            {
+                foreach (var tld in country.TLD)
+                {
+                    if (tld.Length < 2 || !tld.StartsWith(".") || tld.LastIndexOf('.') != 0)
+                    {
+                        Assert.Fail($"Invalid TLD {tld} for {country.Alpha2Code}");
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void Alpha3CodeHasCorrectAsciiValue()
         {
             foreach (var alpha3Code in Enum.GetValues<Alpha3Code>())
