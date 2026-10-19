@@ -295,6 +295,11 @@ namespace Nager.Country
         /// <inheritdoc/>
         public ICountryInfo GetCountry(string alpha2or3Code)
         {
+            if (!IsLetterCode(alpha2or3Code))
+            {
+                throw new UnknownCountryException($"Cannot found a country for code {alpha2or3Code}");
+            }
+
             if (Enum.TryParse(alpha2or3Code, true, out Alpha2Code alpha2Code))
             {
                 return this.GetCountry(alpha2Code);
@@ -330,6 +335,12 @@ namespace Nager.Country
 
         private bool TryGetCountryInternal(string alpha2or3Code, out ICountryInfo? countryInfo)
         {
+            if (!IsLetterCode(alpha2or3Code))
+            {
+                countryInfo = null;
+                return false;
+            }
+
             if (Enum.TryParse(alpha2or3Code, true, out Alpha2Code alpha2Code))
             {
                 if (Enum.IsDefined(typeof(Alpha2Code), alpha2Code))
@@ -350,6 +361,28 @@ namespace Nager.Country
 
             countryInfo = null;
             return false;
+        }
+
+        /// <summary>
+        /// Enum.TryParse also accepts numeric strings (e.g. "6869" for DE),
+        /// so only codes consisting of letters are allowed
+        /// </summary>
+        private static bool IsLetterCode(string alpha2or3Code)
+        {
+            if (string.IsNullOrWhiteSpace(alpha2or3Code))
+            {
+                return false;
+            }
+
+            foreach (var character in alpha2or3Code.Trim())
+            {
+                if (character is not (>= 'A' and <= 'Z' or >= 'a' and <= 'z'))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <inheritdoc/>

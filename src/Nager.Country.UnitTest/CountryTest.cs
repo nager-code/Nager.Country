@@ -35,6 +35,9 @@ namespace Nager.Country.UnitTest
         [DataRow("DE ", true)]
         [DataRow(" DE", true)]
         [DataRow("D1E", false)]
+        [DataRow("6869", false)]
+        [DataRow("686985", false)]
+        [DataRow("DE,AT", false)]
         public void TryGetCountry(string countryCode, bool isSuccessful)
         {
             ICountryProvider countryProvider = new CountryProvider();
@@ -52,6 +55,17 @@ namespace Nager.Country.UnitTest
                 Assert.IsFalse(successful, "The assignment should not be possible.");
                 Assert.IsNull(countryInfo);
             }
+        }
+
+        [TestMethod]
+        [DataRow("6869")]
+        [DataRow("686985")]
+        [DataRow("276")]
+        public void GetCountry_NumericValue_ThrowException(string countryCode)
+        {
+            ICountryProvider countryProvider = new CountryProvider();
+
+            Assert.ThrowsExactly<UnknownCountryException>(() => countryProvider.GetCountry(countryCode));
         }
 
         [TestMethod]
