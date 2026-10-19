@@ -10,6 +10,9 @@ jobs:
     name: Create release
     runs-on: windows-latest
 
+    permissions:
+      contents: write
+
     steps:
     - uses: actions/checkout@v6
     - name: Setup .NET
@@ -31,7 +34,7 @@ jobs:
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
-        repo_name: nager/Nager.Country
+        repo_name: ${{ github.repository }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ${{ runner.temp }}/countries.zip
         asset_name: countries.zip
@@ -42,6 +45,7 @@ jobs:
           A new version of the JSON Country Dataset is now available
           - Country Names
             - Common name
+            - Slug
             - Official name
             - Native name
             - Translations into multiple languages
